@@ -1,38 +1,44 @@
-import argparse
-from todo import add_task, list_tasks, remove_task, mark_done
+from todo import ToDoList
 
-parser = argparse.ArgumentParser(description="Todo CLI App")
-subparsers = parser.add_subparsers(dest="command")
+def menu():
+    print("\n=== Grace's To-Do List ===")
+    print("1. ➕  Add Tasks")
+    print("2. 👀  View Tasks")
+    print("3. ✔  Mark as Done")
+    print("4. ❌ Delete Task")
+    print("5. 💨  Exit")
 
-# add
-add_parser = subparsers.add_parser("add")
-add_parser.add_argument("title")
 
-# list
-subparsers.add_parser("list")
+def main():
+    todo = ToDoList()
 
-# remove
-remove_parser = subparsers.add_parser("remove")
-remove_parser.add_argument("index", type=int)
+    while True:
+        menu()
+        choice = input("Choose: ")
 
-# done
-done_parser = subparsers.add_parser("done")
-done_parser.add_argument("index", type=int)
+        if choice == "1":
+            title = input("Enter your new task: ")
+            todo.add_task(title)
 
-args = parser.parse_args()
+        elif choice == "2":
+            todo.view_tasks()
 
-if args.command == "add":
-    add_task(args.title)
+        elif choice == "3":
+            todo.view_tasks()
+            num = int(input("Task number to mark done: "))
+            todo.mark_done(num)
 
-elif args.command == "list":
-    list_tasks()
+        elif choice == "4":
+            todo.view_tasks()
+            num = int(input("Task number to delete: "))
+            todo.delete_task(num)
 
-elif args.command == "remove":
-    remove_task(args.index)
+        elif choice == "5":
+            print("Byebye💙!")
+            break
 
-elif args.command == "done":
-    mark_done(args.index)
+        else:
+            print("Hindi right ang iyong na pick😂!")
 
-else:
-    parser.print_help()
-    
+if __name__ == "__main__":
+    main()

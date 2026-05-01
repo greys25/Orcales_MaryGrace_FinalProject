@@ -1,14 +1,14 @@
 [
-  {
-    "title": "Test task",
-    "done": false
-  },
-  {
-    "title": "Buy milk",
-    "done": false
-  },
-  {
-    "title": "Study Python",
-    "done": false
-  }
+    {
+        "title": "Review for upcoming exam",
+        "done": false
+    },
+    {
+        "title": "Study Python",
+        "done": false
+    },
+    {
+        "title": "Answer my LT",
+        "done": false
+    }
 ]

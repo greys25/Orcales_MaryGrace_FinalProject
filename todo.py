@@ -1,40 +1,56 @@
 from storage import load_data, save_data
-from colorama import Fore, Style, init
 
-init(autoreset=True)
+class Task:
+    def __init__(self, title, done=False):
+        self.title = title
+        self.done = done
 
-def add_task(title):
-    tasks = load_data()
-    tasks.append({"title": title, "done": False})
-    save_data(tasks)
-    print(Fore.GREEN + f"✔ Added: {title}")
+    def to_dict(self):
+        return {
+            "title": self.title,
+            "done": self.done
+        }
 
-def list_tasks():
-    tasks = load_data()
-    if not tasks:
-        print(Fore.YELLOW + "No tasks yet.")
-        return
+class ToDoList:
+    def __init__(self):
+        self.tasks = []
+        self.load_tasks()
 
-    for i, task in enumerate(tasks, 1):
-        if task["done"]:
-            print(Fore.GREEN + f"{i}. [✓] {task['title']}")
+    def load_tasks(self):
+        data = load_data()
+        self.tasks = [Task(t["title"], t["done"]) for t in data]
+
+    def save_tasks(self):
+        data = [task.to_dict() for task in self.tasks]
+        save_data(data)
+
+    def add_task(self, title):
+        self.tasks.append(Task(title))
+        self.save_tasks()
+        print("Task added!")
+
+    def view_tasks(self):
+        if not self.tasks:
+            print("No tasks yet.")
+            return
+
+        print("\nYour Tasks:")
+        for i, task in enumerate(self.tasks, start=1):
+            status = "✔" if task.done else "✘"
+            print(f"{i}. [{status}] {task.title}")
+
+    def mark_done(self, index):
+        if 1 <= index <= len(self.tasks):
+            self.tasks[index - 1].done = True
+            self.save_tasks()
+            print("Task marked as done!")
         else:
-            print(Fore.RED + f"{i}. [ ] {task['title']}")
+            print("Invalid number.")
 
-def remove_task(index):
-    tasks = load_data()
-    try:
-        removed = tasks.pop(index - 1)
-        save_data(tasks)
-        print(Fore.RED + f"✘ Removed: {removed['title']}")
-    except IndexError:
-        print("Invalid task number.")
-
-def mark_done(index):
-    tasks = load_data()
-    try:
-        tasks[index - 1]["done"] = True
-        save_data(tasks)
-        print(Fore.GREEN + "✔ Task completed")
-    except IndexError:
-        print("Invalid task number.")
+    def delete_task(self, index):
+        if 1 <= index <= len(self.tasks):
+            removed = self.tasks.pop(index - 1)
+            self.save_tasks()
+            print(f"Deleted: {removed.title}")
+        else:
+            print("Invalid number.")
